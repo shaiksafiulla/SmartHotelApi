@@ -1,0 +1,198 @@
+BOX-1 ==> 1 Web Development Foundations • 2 ASP.NET Core Introduction • 3 Project Setup and Structure
+           1.- A web application is software accessed through a browser or another network-connected client ex..https://example.com
+            - The frontend is the part of an application that users see and interact with ex..<button>View Bookings</button>
+            - The backend processes requests, applies business rules, and works with data. ex..Client request -> Backend processing
+            - A client requests a service, and a server receives the request and sends a response. ex..Browser (client) -> Web server -> Response
+            - An API is a defined way for two software systems to communicate. ex..GET /api/bookings
+            - A Web API exposes application functionality over HTTP for other applications to use. ex..GET https://example.com/api/bookings
+
+            - HTTP is the protocol used by clients and web servers to exchange requests and responses ex..GET /api/bookings -> 200 OK
+            - HTTPS protects HTTP communication using TLS encryption ex..https://example.com/api/bookings
+           
+
+        2.- .NET is a development platform providing a runtime, libraries, and tools for building applications. ex..dotnet --version
+            - ASP.NET Core is the .NET framework for building web applications and HTTP services. ex..var builder = WebApplication.CreateBuilder(args);
+            - An ASP.NET Core Web API is a server application that exposes endpoints over HTTP. ex..app.MapGet("/api/hello", () => "Hello API");
+            - Cross-platform applications can run on supported operating systems such as Windows, Linux, and macOS. ex..dotnet run
+            - Kestrel is the cross-platform web server commonly used to host ASP.NET Core applications. ex..app.Run();
+            - Hosting means running an application on a server so clients can access it. ex..dotnet run --urls http://localhost:5000
+            - The .NET CLI creates, builds, runs, tests, and publishes .NET projects. ex.. dotnet new webapi -n StudentApi
+
+        3. - The Web API template creates the starting structure for an ASP.NET Core API. ex..dotnet new webapi -n StudentApi
+            - Build compiles the project, while run starts the application. ex..dotnet build + dotnet run
+            - The .csproj file identifies the target framework and project dependencies ex.. <TargetFramework>net10.0</TargetFramework>
+            - Program.cs is the entry point where services are registered and the HTTP pipeline is configured.
+                var builder = WebApplication.CreateBuilder(args);\nvar app = builder.Build();\napp.Run();
+            - appsettings.json stores application settings such as logging levels and connection strings. ex.. { "Logging": { "LogLevel": { "Default": "Information" } } }
+            - launchSettings.json contains local development launch profiles and settings such as application URLs. ex.. "applicationUrl": "http://localhost:5000"
+            - Environments let an application use different configuration and behaviour for Development, Staging, and Production. ex..app.Environment.IsDevelopment()
+
+BOX-2 ==> 4 HTTP Fundamentals • 5 Endpoints, Routing and Minimal APIs • 6 Controllers and Actions • 10 Middleware
+        4. - An HTTP request is a message sent by a client asking a server to perform an operation. ex.. GET /api/bookings HTTP/1.1
+           - An HTTP response is the server reply containing a status code, headers, and sometimes a body. ex..HTTP/1.1 200 OK\nContent-Type: application/json
+           - HTTP methods describe the operation a client wants to perform on a resource. ex..GET  POST  PUT  PATCH  DELETE
+           - HTTP status codes tell the client whether a request succeeded or failed ex..200 OK | 201 Created | 400 Bad Request | 404 Not Found | 500 Server Error
+           - HTTP headers carry extra information about a request or response ex..Content-Type: application/json
+           - A query string passes optional values in a URL, often for filtering or paging. ex../api/bookings?city=Bangalore&page=1
+           - A route parameter captures a value from a defined part of the URL. ex../api/bookings/25
+           - The request body carries data sent by a client, commonly with POST, PUT, or PATCH. ex..{ "name": "Ravi" }
+           - An operation is idempotent when repeating it has the same intended effect as performing it once. ex.. PUT /api/bookings/25
+           - JSON is a lightweight text format commonly used to exchange structured data. ex..{ "id": 1, "name": "Asha" }
+           - REST is an architectural style for designing network APIs around resources and standard HTTP behaviour. ex..GET /api/bookings/1
+
+        5. - An endpoint is an address and handler in an application that responds to a request. ex..app.MapGet("/api/status", () => "Running");
+           - A Minimal API defines HTTP endpoints directly using concise route-handler code. ex..app.MapGet("/api/hello", () => Results.Ok("Hello"));
+           - MapGet, MapPost, MapPut, MapPatch, and MapDelete connect HTTP methods to handlers. ex.. app.MapGet("/api/items", () => items);
+           - A route template defines the URL pattern an endpoint responds to. ex..app.MapGet("/api/bookings/{id}", (int id) => id);
+           - A route constraint restricts the values accepted for a route parameter. ex.. [HttpGet("{id:int}")]
+           - Route groups organize related Minimal API endpoints under a shared prefix or configuration. ex..var group = app.MapGroup("/api/bookings");
+           - Endpoint filters run around Minimal API handlers to inspect inputs or results. ex.. group.AddEndpointFilter(async (ctx, next) => await next(ctx));
+
+        6. - A controller is a class that groups related API actions and handles HTTP requests. ex.. [ApiController]\n[Route("api/[controller]")]\npublic class BookingsController : ControllerBase { }
+           - ControllerBase provides common functionality for API controllers without view support. ex..public class BookingsController : ControllerBase { }
+           - An action method is a controller method that handles a matching HTTP request. ex..[HttpGet]\npublic IActionResult Get() => Ok("Bookings");
+           - AddControllers registers controller services, and MapControllers maps controller routes. ex..builder.Services.AddControllers();\napp.MapControllers();
+           - HTTP attributes connect actions to methods such as GET, POST, PUT, PATCH, and DELETE. ex.. [HttpGet]\n[HttpPost]\n[HttpPut("{id}")]
+           - IActionResult represents an HTTP result; ActionResult<T> can return a typed value or an HTTP result. ex..public ActionResult<Student> Get() => Ok(student);
+           - Common Result helpers create standard HTTP responses with suitable status codes. ex.. return Ok(data);\nreturn NotFound();\nreturn BadRequest();\nreturn NoContent();
+           - ApiController enables API-specific behaviour such as automatic validation responses and attribute routing. ex.. [ApiController]
+
+        10.- Middleware is a component that inspects, handles, or passes along HTTP requests and responses. ex.. app.Use(async (context, next) => { await next(); });
+           - The request pipeline is the ordered sequence of middleware that processes each HTTP request. ex..app.UseHttpsRedirection();\napp.UseAuthentication();\napp.UseAuthorization();
+           - Middleware order matters because each component can run before and after the next component. ex.. app.UseRouting();\napp.UseAuthentication();\napp.UseAuthorization();
+           - Custom middleware adds reusable request or response behaviour to the pipeline. ex.. app.Use(async (context, next) => { await next(); });
+           - Middleware short-circuits when it returns a response without calling the next component. ex.. if (blocked) { context.Response.StatusCode = 403; return; }
+           - Exception-handling middleware catches unhandled errors and creates controlled responses. ex..app.UseExceptionHandler();
+
+BOX-3 ==> 7 Request Data, DTOs and JSON • 8 CRUD and API Design • 9 Dependency Injection and Services • 11 Validation and Filters • 18 Asynchronous Programming
+
+        7. - A model is a C# type representing data used by an application. ex..public class Student { public int Id { get; set; } public string Name { get; set; } = ""; }
+           - Model binding reads request values and converts them into action parameters or C# objects. ex..public IActionResult Get([FromQuery] string city) => Ok(city);
+           - Binding-source attributes tell ASP.NET Core where to read a value ex.. [FromRoute] int id\n[FromQuery] string city\n[FromBody] Student student
+           - A Data Transfer Object defines data accepted or returned by an API without exposing internal entities. ex.. public record CreateStudentRequest(string Name, string Email);
+           - Separate request and response DTOs let an API control incoming and outgoing data independently. ex..public record StudentResponse(int Id, string Name);
+           - Serialization converts a .NET object into JSON for an HTTP response. ex.. JsonSerializer.Serialize(student);
+           - Deserialization converts JSON text into a .NET object ex.. JsonSerializer.Deserialize<Student>(json);
+           - Content negotiation selects a response format supported by the client and server. ex.. Accept: application/json
+           - Nullable reference types express whether a reference may contain null. ex..public string? MiddleName { get; set; }
+
+        8. - CRUD describes Create, Read, Update, and Delete operations. ex.. POST=create | GET=read | PUT/PATCH=update | DELETE=delete
+           - A create endpoint accepts new data and commonly returns 201 Created. ex.. return CreatedAtAction(nameof(Get), new { id }, student);
+           - Read endpoints retrieve one resource or a collection without changing it. ex.. [HttpGet("{id:int}")]\npublic IActionResult Get(int id) => Ok(id);
+           - PUT commonly replaces a resource, while PATCH applies a partial update. ex.. [HttpPut("{id:int}")]\npublic IActionResult Update(int id) => NoContent();
+           - A delete endpoint removes or deactivates a resource and commonly returns 204 No Content. ex.. [HttpDelete("{id:int}")]\npublic IActionResult Delete(int id) => NoContent();
+           - REST endpoints generally use clear resource nouns and URLs to represent relationships. ex../api/bookings/10/courses
+           - API versioning lets an API evolve while supporting clients using earlier contracts. ex../api/v1/bookings
+
+        9. - Dependency Injection supplies a class with the services it needs instead of having it create them. ex..public BookingsController(IBookingService service) { }
+           - Service registration tells the built-in container which implementation to provide. ex..builder.Services.AddScoped<IBookingService, BookingService>();
+           - A transient service is created each time it is requested from the container ex..builder.Services.AddTransient<IHelper, Helper>();
+           - A scoped service is typically created once per web request. ex.. builder.Services.AddScoped<IBookingService, BookingService>();
+           - A singleton service is created once and reused for the application's lifetime. ex..builder.Services.AddSingleton<IClock, SystemClock>();
+           - An interface defines a contract so code can depend on a capability rather than a concrete class. ex.. public interface IBookingService { Student? GetById(int id); }
+           - A service layer holds application operations so controllers can focus on HTTP handling. ex.. public Student? GetStudent(int id) => repository.Find(id);
+           - A repository places data-access operations behind a focused interface. ex.. public interface IStudentRepository { Task<Student?> FindAsync(int id); }
+
+        11.- Data annotations apply validation rules or metadata to model properties. ex..[Required] public string Name { get; set; } = "";
+           - Model validation checks incoming data against defined rules before application logic uses it. ex..[Range(1, 100)] public int Age { get; set; }
+           - Validation problem details return structured information about invalid request fields. ex.. return ValidationProblem(ModelState);
+           - Action filters run code before or after a controller action executes. ex..public class AuditFilter : IActionFilter { }
+           - Exception filters handle exceptions raised during MVC action execution. ex..public class ApiExceptionFilter : IExceptionFilter { }
+           - Authorization filters participate early in MVC execution to determine whether a request may proceed. ex.. [Authorize(Roles = "Admin")]
+           - Filters vs Middleware..Middleware applies in the HTTP pipeline; MVC filters apply within controller/action execution. ex.. app.Use(...); // middleware
+
+        18.- Synchronous vs Asynchronous..Synchronous work waits for completion; asynchronous I/O can release the thread while waiting for an operation. ex..var data = await service.GetBookingsAsync();
+           - async and await make asynchronous operations readable without blocking while awaited I/O is pending. ex.. public async Task<IActionResult> Get() { var data = await service.GetAsync(); return Ok(data); }
+           - Task represents an asynchronous operation; Task<T> represents one that produces a value. ex.. Task SaveAsync();\nTask<Student?> FindAsync(int id);
+           - CancellationToken communicates a cooperative request to stop work that is no longer needed. ex.. public Task<IActionResult> Get(CancellationToken token)
+           - ConfigureAwait controls context capture after await; it is usually unnecessary in typical ASP.NET Core application code. ex.. await operation.ConfigureAwait(false);
+
+BOX-4 ==> 12 Data Access and EF Core
+        12.- Data access is the part of an application that reads and writes information in a data store. ex..var bookings = await db.Bookings.ToListAsync();
+           - EF Core is an object-relational mapper that lets .NET code work with relational databases. ex.. builder.Services.AddDbContext<AppDbContext>(options => ...);
+           - An entity is a C# class that EF Core maps to a database table or other database object. ex.. public class Student { public int Id { get; set; } }
+           - DbContext represents a database session and coordinates querying and saving entity changes. ex.. public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options) { }
+           - DbSet represents a collection of entities that EF Core can query and save. ex.. public DbSet<Student> Bookings => Set<Student>();
+           - Migrations.. record and apply changes to the database schema as the model evolves. ex..dotnet ef migrations add InitialCreate\ndotnet ef database update
+           - LINQ expresses database queries in C# syntax that EF Core translates for the database provider. ex.. await db.Bookings.Where(s => s.IsActive).ToListAsync();
+           - AsNoTracking reads entities without change tracking and can improve read-only query performance. ex.. db.Bookings.AsNoTracking().ToListAsync();
+           - A database provider connects EF Core to a specific database system. ex.. options.UseNpgsql(connectionString);
+           - A transaction.. groups database operations so they succeed or fail together. ex.. await using var tx = await db.Database.BeginTransactionAsync();
+
+BOX-5 ==> 13 Configuration and Environments • 14 Error Handling and Logging • 15 Authentication and Authorization • 16 CORS • 17 API Documentation and Testing Tools • 19 Advanced API Capabilities • 20 Security • 21 Performance and Reliability • 22 Testing • 23 Deployment • 24 Architecture
+        13.- Configuration.. supplies settings from JSON files, environment variables, command-line arguments, and other sources. ex.. builder.Configuration["AppSettings:Title"];
+           - Environment variables provide settings outside source code and can override file-based settings. ex.. ConnectionStrings__Default=...
+           - A connection string contains information needed to connect to a data source. ex.. builder.Configuration.GetConnectionString("Default");
+           - User Secrets stores development-time sensitive settings outside project files. ex.. dotnet user-secrets set "ApiKey" "development-value"
+           - The options pattern maps related configuration values to a strongly typed C# class. ex.. builder.Services.Configure<MailOptions>(builder.Configuration.GetSection("Mail"));
+           - IOptions and IOptionsSnapshot..These interfaces provide typed configuration access; IOptionsSnapshot is scoped and can reflect updated values per request. ex.. public MailService(IOptions<MailOptions> options) { }
+           - Environment-specific settings allow different values for Development, Staging, and Production. ex.. appsettings.Development.json
+        14.- An exception represents an error or unexpected condition during program execution. ex.. throw new InvalidOperationException("Student not found.");
+           - Global error handling catches unhandled errors in one place and returns a consistent response. ex..app.UseExceptionHandler();
+           - Problem Details is a standard response format for describing HTTP API errors. ex.. return Results.Problem(title: "Unable to process", statusCode: 500);
+           - Logging records application activity, warnings, and errors for diagnosis and monitoring. ex..logger.LogInformation("Student {StudentId} requested", id);
+           - Log levels classify messages by importance, from detailed trace information to critical failures. ex.. LogTrace(); LogDebug(); LogInformation(); LogWarning(); LogError(); LogCritical();
+           - Structured logging records named values separately so log data can be searched and analysed. ex..logger.LogInformation("Order {OrderId} created", orderId);
+        15.- Authentication verifies who a user or calling system is. ex..app.UseAuthentication();
+           - Authorization decides what an authenticated user is allowed to access or do. ex.. app.UseAuthorization();
+           - A claim is a statement about a user, such as an identifier or permission-related attribute. ex.. new Claim(ClaimTypes.Name, "asha")
+           - Roles group users by responsibility and can control access to API operations. ex.. [Authorize(Roles = "Admin")]
+           - Policy-based authorization uses named rules to decide whether a user can access a resource. ex..options.AddPolicy("Reports", p => p.RequireClaim("permission", "reports.read"));
+           - A JSON Web Token is a signed token commonly used to carry identity and authorization information. ex.. Authorization: Bearer <token>
+           - Bearer authentication validates access tokens sent in the Authorization header. ex..builder.Services.AddAuthentication().AddJwtBearer();
+           - Password hashing stores a one-way derived value instead of the original password. ex..passwordHasher.HashPassword(user, password);
+           - Secret Protection..Secrets such as passwords and signing keys should be stored outside source code and protected ex..builder.Configuration["Jwt:SigningKey"];
+        16.- CORS is a browser security mechanism controlling whether a web page from one origin can call an API at another origin. ex.. builder.Services.AddCors();
+           - An origin is the combination of a scheme, host, and port. ex..https://example.com:443
+           - A CORS policy defines which origins, methods, and headers a browser client may use. ex..p.WithOrigins("https://localhost:3000").AllowAnyHeader().AllowAnyMethod();
+           - A registered CORS policy must be applied to the pipeline or selected endpoints. ex..app.UseCors("Frontend");
+        17.- OpenAPI is a standard description format for documenting API endpoints, inputs, and responses. ex.. builder.Services.AddOpenApi();\napp.MapOpenApi();
+           - Swagger UI is an interactive interface for viewing API documentation and sending test requests. // Configure Swagger UI using the appropriate package.
+           - An API client sends HTTP requests and displays the returned status, headers, and body. ex.. curl -i https://localhost:7001/api/bookings
+           - Postman is a tool for creating, sending, organizing, and testing HTTP API requests. ex..GET http://localhost:5000/api/bookings
+           - An API contract describes endpoints, request formats, response formats, and expected status codes. ex..GET /api/bookings -> 200 application/json
+        19.- API Capabilities..Pagination divides large result sets into smaller pages. ex.. GET /api/bookings?page=2&pageSize=20
+           - Filtering returns only resources that match specified conditions ex.. GET /api/bookings?city=Guntur
+           - Sorting returns resources in a requested order. ex.. GET /api/bookings?sortBy=name&direction=asc
+           - Caching stores reusable data temporarily so repeated requests can be served faster. ex.. builder.Services.AddMemoryCache();
+           - Response caching allows eligible HTTP responses to be reused according to cache headers and policy. ex.. builder.Services.AddResponseCaching();\napp.UseResponseCaching();
+           - Output caching stores generated endpoint responses on the server for reuse. ex.. builder.Services.AddOutputCache();\napp.UseOutputCache();
+           - Rate limiting restricts how frequently a client can call an API within a defined period. ex.. builder.Services.AddRateLimiter(options => { /* configure policy */ });
+           - Health checks report whether an application and its dependencies are operating correctly. ex.. builder.Services.AddHealthChecks();\napp.MapHealthChecks("/health");
+           - A background service performs work outside an individual HTTP request. ex.. public class CleanupWorker : BackgroundService { }
+           - A hosted service is managed by the application host and starts and stops with the application. ex.. builder.Services.AddHostedService<CleanupWorker>();
+           - A file upload endpoint receives files sent by clients, commonly as multipart form data. ex.. public IActionResult Upload(IFormFile file) => Ok(file.FileName);
+        20.- HTTPS enforcement redirects or requires clients to use encrypted connections. ex.. app.UseHttpsRedirection();
+           - Input validation checks incoming data against expected rules before processing. ex.. [EmailAddress] public string Email { get; set; } = "";
+           - SQL injection is an attack where untrusted input changes the meaning of a database query. // Use parameterized queries or EF Core LINQ.
+           - XSS occurs when untrusted content is interpreted as executable script in a user's browser. // Encode untrusted content before rendering HTML.
+           - CSRF tricks a user's browser into sending an unwanted request using an existing authenticated session. // Use anti-forgery protection for cookie-authenticated browser forms.
+           - Least privilege gives each user or service only the permissions needed for its task. ex.. [Authorize(Policy = "Student.Read")]
+           - Sensitive data should not be exposed in logs, error messages, URLs, or public API responses. // Never log passwords, tokens, or secret keys.
+        21.- Profiling measures execution time and resource use to identify bottlenecks. // dotnet-counters monitor --process-id <PID>
+           - Asynchronous I/O lets a server handle other work while waiting for network, file, or database operations. ex.. await db.Bookings.ToListAsync(token);
+           - Connection pooling reuses database connections to reduce repeated connection setup costs. // Commonly enabled by default by database providers.
+           - Resilience techniques help an application handle temporary failures and recover safely. // Use bounded retries and timeouts where appropriate.
+           - IHttpClientFactory creates and configures HttpClient instances while managing underlying handlers. ex.. builder.Services.AddHttpClient<WeatherClient>();
+           - A timeout limits how long an operation may wait before it is cancelled or fails. ex.. client.Timeout = TimeSpan.FromSeconds(10);
+        22.- A unit test checks one small piece of behaviour independently from external systems. ex.. Assert.Equal(5, Calculator.Add(2, 3));
+           - An integration test checks whether multiple application components work together correctly. ex..var response = await client.GetAsync("/api/bookings");
+           - WebApplicationFactory creates an in-memory test host for exercising an ASP.NET Core application. ex..IClassFixture<WebApplicationFactory<Program>>
+           - Mocking replaces a dependency with a controlled test object so a unit can be tested in isolation. ex.. var service = new Mock<IBookingService>();
+           - Test coverage measures which parts of code are executed by automated tests. ex.. dotnet test --collect:"XPlat Code Coverage"
+        23.- Publishing prepares application files for deployment to a hosting environment. //dotnet publish -c Release
+           - A framework-dependent deployment uses a compatible .NET runtime installed on the target machine. //dotnet publish -c Release
+           - A self-contained deployment includes the .NET runtime needed for a selected target platform //dotnet publish -c Release --self-contained
+           - A reverse proxy receives client requests and forwards them to an application server. //Client -> Reverse Proxy -> Kestrel
+           - IIS is Microsoft's Windows web server and can host or proxy ASP.NET Core applications // Host the published app behind IIS.
+           - Docker packages an application and its dependencies into an image that can run as a container. //docker build -t student-api .
+           - Deployment environments supply production settings separately from development settings. //ASPNETCORE_ENVIRONMENT=Production
+        24.- Architecture and Maintainability..Separation of concerns keeps responsibilities in distinct parts of an application. //Controller -> Service -> Data Access
+           - Layered architecture organizes code into areas such as API, business logic, and data access. //API Layer | Business Layer | Data Access Layer
+           - Clean Architecture keeps core business rules independent from external frameworks and infrastructure. //Domain <- Application <- Infrastructure / Presentation
+           - SOLID principles help keep classes focused, extensible, and easier to maintain //public interface IBookingService { }
+           - Dependency Inversion makes high-level logic depend on abstractions rather than concrete infrastructure classes. //public BookingsController(IBookingService service) { }
+
+
+
+

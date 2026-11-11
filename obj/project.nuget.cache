@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "AY++BS3jnK4=",
+  "success": true,
+  "projectFilePath": "D:\\SmartHotelApi\\SmartHotelApi.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\drsha\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.13\\microsoft.aspnetcore.openapi.10.0.13.nupkg.sha512",
+    "C:\\Users\\drsha\\.nuget\\packages\\microsoft.openapi\\2.12.2\\microsoft.openapi.2.12.2.nupkg.sha512"
+  ],
+  "logs": []
+}
