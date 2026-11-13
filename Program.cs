@@ -14,7 +14,61 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection(); // pipelines
 
-#region minimal API
+// app.Use(async (context, next) =>
+// {
+//     Console.WriteLine("1. Request entering middleware");
+
+//     await next();
+
+//     Console.WriteLine("4. Response leaving middleware");
+// });
+
+// // Middleware A
+// app.Use(async (context, next) =>
+// {
+//     Console.WriteLine("A - Before");
+
+//     await next();
+
+//     Console.WriteLine("A - After");
+// });
+
+
+// // Middleware B
+// app.Use(async (context, next) =>
+// {
+//     Console.WriteLine("B - Before");
+
+//     await next();
+
+//     Console.WriteLine("B - After");
+// });
+
+// // Terminal Middleware C
+// app.Run(async context =>
+// {
+//     Console.WriteLine("C - Terminal middleware executing");
+
+//     context.Response.ContentType = "text/plain";
+
+//     await context.Response.WriteAsync(
+//         "Request handled by terminal middleware."
+//     );
+// });
+// Middleware branch
+// app.Map("/hotel-check", hotelBranch =>
+// {
+//     hotelBranch.Run(async context =>
+//     {
+//         Console.WriteLine("Hotel Check branch executing");
+
+//         await context.Response.WriteAsync(
+//             "Welcome to Hotel Check!"
+//         );
+//     });
+// });
+
+// #region minimal API
 // var summaries = new[]
 // {
 //     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
@@ -33,7 +87,7 @@ app.UseHttpsRedirection(); // pipelines
 //     return forecast;
 // })
 // .WithName("GetWeatherForecast");
-#endregion
+// #endregion
 app.MapControllers();
 app.Run();
 

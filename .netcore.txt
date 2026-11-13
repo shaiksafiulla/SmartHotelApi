@@ -1,4 +1,5 @@
 BOX-1 ==> 1 Web Development Foundations • 2 ASP.NET Core Introduction • 3 Project Setup and Structure
+
            1.- A web application is software accessed through a browser or another network-connected client ex..https://example.com
             - The frontend is the part of an application that users see and interact with ex..<button>View Bookings</button>
             - The backend processes requests, applies business rules, and works with data. ex..Client request -> Backend processing
@@ -28,6 +29,7 @@ BOX-1 ==> 1 Web Development Foundations • 2 ASP.NET Core Introduction • 3 Pr
             - Environments let an application use different configuration and behaviour for Development, Staging, and Production. ex..app.Environment.IsDevelopment()
 
 BOX-2 ==> 4 HTTP Fundamentals • 5 Endpoints, Routing and Minimal APIs • 6 Controllers and Actions • 10 Middleware
+
         4. - An HTTP request is a message sent by a client asking a server to perform an operation. ex.. GET /api/bookings HTTP/1.1
            - An HTTP response is the server reply containing a status code, headers, and sometimes a body. ex..HTTP/1.1 200 OK\nContent-Type: application/json
            - HTTP methods describe the operation a client wants to perform on a resource. ex..GET  POST  PUT  PATCH  DELETE
@@ -108,6 +110,7 @@ BOX-3 ==> 7 Request Data, DTOs and JSON • 8 CRUD and API Design • 9 Dependen
            - ConfigureAwait controls context capture after await; it is usually unnecessary in typical ASP.NET Core application code. ex.. await operation.ConfigureAwait(false);
 
 BOX-4 ==> 12 Data Access and EF Core
+
         12.- Data access is the part of an application that reads and writes information in a data store. ex..var bookings = await db.Bookings.ToListAsync();
            - EF Core is an object-relational mapper that lets .NET code work with relational databases. ex.. builder.Services.AddDbContext<AppDbContext>(options => ...);
            - An entity is a C# class that EF Core maps to a database table or other database object. ex.. public class Student { public int Id { get; set; } }
@@ -120,6 +123,7 @@ BOX-4 ==> 12 Data Access and EF Core
            - A transaction.. groups database operations so they succeed or fail together. ex.. await using var tx = await db.Database.BeginTransactionAsync();
 
 BOX-5 ==> 13 Configuration and Environments • 14 Error Handling and Logging • 15 Authentication and Authorization • 16 CORS • 17 API Documentation and Testing Tools • 19 Advanced API Capabilities • 20 Security • 21 Performance and Reliability • 22 Testing • 23 Deployment • 24 Architecture
+
         13.- Configuration.. supplies settings from JSON files, environment variables, command-line arguments, and other sources. ex.. builder.Configuration["AppSettings:Title"];
            - Environment variables provide settings outside source code and can override file-based settings. ex.. ConnectionStrings__Default=...
            - A connection string contains information needed to connect to a data source. ex.. builder.Configuration.GetConnectionString("Default");

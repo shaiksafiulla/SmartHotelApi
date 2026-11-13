@@ -31,3 +31,4 @@ D:\SmartHotelApi\obj\Debug\net10.0\refint\SmartHotelApi.dll
 D:\SmartHotelApi\obj\Debug\net10.0\SmartHotelApi.pdb
 D:\SmartHotelApi\obj\Debug\net10.0\SmartHotelApi.genruntimeconfig.cache
 D:\SmartHotelApi\obj\Debug\net10.0\ref\SmartHotelApi.dll
+D:\SmartHotelApi\obj\Debug\net10.0\SmartHotelApi.sourcelink.json
